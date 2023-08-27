@@ -86,7 +86,7 @@ insert into tasks (id, todo, user_id) values (1, 'anon task', 'anon'), (2, 'admi
 
 `worker.ts` implements the 2 API routes in a Cloudflare Worker. 
 
-When `/query` is invoked, first it fetches the record from the `_users` table. We use [node-sql-parser]() to parse the incoming SQL queries. Similar to PostgreSQL's `CREATE POLICY` statements, our policies too provide two kind of validations via SQL's boolean expressions that can use two special values (`$$CURRENT_USER$$` and `$$CURRENT_ROLE$$`): 
+When `/query` is invoked, first it fetches the record from the `_users` table. We use [node-sql-parser](https://github.com/taozhi8833998/node-sql-parser) to parse the incoming SQL queries. Similar to PostgreSQL's `CREATE POLICY` statements, our policies too provide two kind of validations via SQL's boolean expressions that can use two special values (`$$CURRENT_USER$$` and `$$CURRENT_ROLE$$`):
 
 - `using_clause` that gets added to incoming queries' as a `WHERE` clause. This controls the visibility of existing rows for `SELECT`, `UPDATE`, and `DELETE` statements.
 - `withcheck_clause` validates new incoming values for `INSERT` and `UPDATE` statements.
