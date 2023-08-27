@@ -63,13 +63,13 @@ create table _policies (
 
 `using_clause_sql`` defines which rows are made visible for select, update, delete.
 `withcheck_clause_js`` defines javascript filter for incoming rows for insert, update.
-In both, $$CURRENT_USER$$ will be replaced by the actual user_id who has sent the query. Similarly, `$$CURRENT_ROLE$$` will be replaced by the user's role (eg: "anon" / "admin" / "regular")
+In both, `$$CURRENT_USER$$` will be replaced by the actual user_id who has sent the query. Similarly, `$$CURRENT_ROLE$$` will be replaced by the user's role (eg: "anon" / "admin" / "regular")
 
 For example, to allow users to read only their own tasks:
 ```
-insert into _policies (table_name, action, using_clause, withcheck_clause) 
-values ('tasks', 'select', 'user_id = $$CURRENT_USER$$', null),
-values ('tasks', 'insert', 'true', 'user_id = $$CURRENT_USER$$');
+insert into _policies (table_name, action, using_clause, withcheck_clause) values 
+('tasks', 'select', 'user_id = $$CURRENT_USER$$', null),
+('tasks', 'insert', 'true', 'user_id = $$CURRENT_USER$$');
 ```
 
 Now, create your tasks table:
@@ -86,7 +86,7 @@ insert into tasks (id, todo, user_id) values (1, 'anon task', 'anon'), (2, 'admi
 
 `worker.ts` implements the 2 API routes in a Cloudflare Worker. 
 
-When `/query` is invoked, first it fetches the record from the `_users` table. We use [node-sql-parser]() to parse the incoming SQL queries. Similar to PostgreSQL's `CREATE POLICY` statements, our policies too provide two kind of validations via SQL's boolean expressions that can use two special values ($$CURRENT_USER$$ and $$CURRENT_ROLE$$): 
+When `/query` is invoked, first it fetches the record from the `_users` table. We use [node-sql-parser]() to parse the incoming SQL queries. Similar to PostgreSQL's `CREATE POLICY` statements, our policies too provide two kind of validations via SQL's boolean expressions that can use two special values (`$$CURRENT_USER$$` and `$$CURRENT_ROLE$$`): 
 
 - `using_clause` that gets added to incoming queries' as a `WHERE` clause. This controls the visibility of existing rows for `SELECT`, `UPDATE`, and `DELETE` statements.
 - `withcheck_clause` validates new incoming values for `INSERT` and `UPDATE` statements.
